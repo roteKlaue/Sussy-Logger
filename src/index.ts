@@ -1,12 +1,12 @@
-import { constants, WriteStream, accessSync, createWriteStream, readFileSync } from "fs";
 import PermissionException from "./classes/PermissionException";
 import LoggerOptions from "./Types/LoggerOptions";
 import EventEmitter from "events";
 import process from "process";
+import fs from "fs";
 
 export default class Logger extends EventEmitter {
     private formater: (level: string, messgae: string, timestamp?: Date) => string = (level, message) => `[${level.toUpperCase()}] ${message}`;
-    private fileStream: WriteStream | undefined;
+    private readonly fileStream: fs.WriteStream | undefined;
     private readonly closeOnExit: boolean;
     private readonly hideConsole: boolean;
     private readonly path: string | null;
@@ -23,11 +23,12 @@ export default class Logger extends EventEmitter {
         let content = "";
         if (this.path) {
             try {
-                accessSync(this.path, constants.R_OK | constants.W_OK);
+                if(!fs.existsSync(this.path)) fs.writeFileSync(this.path, content);
+                fs.accessSync(this.path, fs.constants.R_OK | fs.constants.W_OK);
                 if(this.append) {
-                    content = readFileSync(this.path, "utf8");
+                    content = fs.readFileSync(this.path, "utf8");
                 }
-                this.fileStream = createWriteStream(this.path);
+                this.fileStream = fs.createWriteStream(this.path);
                 this.fileStream.write(content);
             } catch (e) {
                 throw new PermissionException("Missing permission to access log file/location.");
