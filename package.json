@@ -1,15 +1,23 @@
 {
-  "name": "console-better",
-  "version": "alpha-1.0.0",
-  "description": "",
+  "name": "sussy-logger",
+  "version": "0.0.1",
+  "description": "A customization logger for JavaScript/TypeScript",
   "main": "index.js",
+  "devDependencies": {
+    "@types/node": "^18.11.17"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/roteKlaue/Sussy-Formatter.git"
+  },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/node": "^18.11.17"
-  }
+  "author": "roteKlaue <https://github.com/roteKlaue>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/roteKlaue/Sussy-Formatter/issues"
+  },
+  "homepage": "https://github.com/roteKlaue/Sussy-Formatter#readme"
 }
