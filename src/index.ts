@@ -1,4 +1,4 @@
-import { constants, WriteStream, accessSync, createWriteStream } from "fs";
+import { constants, WriteStream, accessSync, createWriteStream, readFileSync } from "fs";
 import PermissionException from "./classes/PermissionException";
 import LoggerOptions from "./Types/LoggerOptions";
 import EventEmitter from "events";
@@ -10,6 +10,7 @@ export default class Logger extends EventEmitter {
     private readonly closeOnExit: boolean;
     private readonly hideConsole: boolean;
     private readonly path: string | null;
+    private readonly append: boolean;
     private dead: boolean = false;
 
     constructor(options?: LoggerOptions) {
@@ -17,11 +18,17 @@ export default class Logger extends EventEmitter {
         this.closeOnExit = options?.closeOnExit ? true : false;
         this.hideConsole = options?.hideConsole ? true : false;
         this.path = options?.path ? options.path : null;
+        this.append = options?.append ? options.append : false;
 
-        if (this.path !== null) {
+        let content = "";
+        if (this.path) {
             try {
                 accessSync(this.path, constants.R_OK | constants.W_OK);
+                if(this.append) {
+                    content = readFileSync(this.path, "utf8");
+                }
                 this.fileStream = createWriteStream(this.path);
+                this.fileStream.write(content);
             } catch (e) {
                 throw new PermissionException("Missing permission to access log file/location.");
             }
@@ -50,10 +57,11 @@ export default class Logger extends EventEmitter {
         }
         if (this.path && this.fileStream) {
             this.fileStream.write(res, (err) => {
+                if(!err) return;
                 this.emit("error", err);
             });
         }
-        this.emit("log", res);
+        this.emit("log", res, level, message, new Date(Date.now()));
         return this;
     }
 
