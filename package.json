@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/roteKlaue/Sussy-Formatter/issues"
   },
-  "homepage": "https://github.com/roteKlaue/Sussy-Formatter#readme"
+  "homepage": "https://github.com/roteKlaue/Sussy-Formatter#readme",
+  "dependencies": {
+    "chalk": "^5.2.0"
+  }
 }
