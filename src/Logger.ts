@@ -60,7 +60,7 @@ export default class Logger extends EventEmitter {
             console.log(res);
         }
         if (this.path && this.fileStream) {
-            this.fileStream.write(res + "\n", (err) => {
+            this.fileStream.write(res + "\r\n", (err) => {
                 if (!err) return;
                 this.emit("error", err);
             });
