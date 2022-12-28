@@ -1,6 +1,6 @@
 {
   "name": "sussy-logger",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "A customization logger for JavaScript/TypeScript",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
@@ -14,7 +14,13 @@
     "type": "git",
     "url": "git+https://github.com/roteKlaue/Sussy-Formatter.git"
   },
-  "keywords": [],
+  "keywords": [
+    "logger",
+    "typescript",
+    "javascript",
+    "sussy",
+    "formatter"
+  ],
   "author": "roteKlaue <https://github.com/roteKlaue>",
   "license": "MIT",
   "bugs": {
