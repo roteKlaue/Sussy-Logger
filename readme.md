@@ -1,6 +1,6 @@
 <h1 align="center"> Sussy Logger </h1>
 
-<p> Sussy Logger is a fully customizable logger.<br> If given a file path it will write into said file and create it if it doesn't exists.<br> </p>
+<p align="center"> Sussy Logger is a fully customizable logger.<br> If given a file path it will write into said file and create it if it doesn't exists.<br> </p>
 
 ### Setup:
 ```js
