@@ -1,9 +1,9 @@
 import PermissionException from "./classes/PermissionException";
 import LoggerOptions from "./Types/LoggerOptions";
+import Level from "./Types/Level";
 import EventEmitter from "events";
 import process from "process";
 import fs from "fs";
-import Level from "./Types/Level";
 
 export default class Logger extends EventEmitter {
     private formater: (level: string, messgae: string, timestamp?: Date) => string = (level, message) => `[${level.toUpperCase()}] ${(message)}`;
