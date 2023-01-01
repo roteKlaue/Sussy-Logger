@@ -4,17 +4,24 @@
 
 ### Setup:
 ```js
-const { Logger } = require("sussy-logger");
+const { Logger, Levels } = require("sussy-logger");
 const logger = new Logger({ 
     closeOnExit: true/false/undefined, // standard = true
-    path: /* path */,
-    append: true/false/undefined, // standard = true
-    hideConsole: true/false/undefined // standard = true
+    hideConsole: true/false/undefined // standard = false
 });
 
 logger.log(/* level */, /* data */);
+
+logger.formatFile((level, message, timestamp) => {
+    /* format hier for file return formatted string */
+});
+
+logger.formatConsole((level, message, timestamp) => {
+    /* format hier for file return formatted string */
+});
+
 logger.format((level, message, timestamp) => {
-    /* format hier and return formatted string */
+    /* format hier for both return formatted string */
 });
 ```
 
@@ -22,26 +29,18 @@ logger.format((level, message, timestamp) => {
 
 ### Code:
 ```js
-const { Logger } = require("sussy-logger");
+const { Logger, Levels } = require("sussy-logger");
 const logger = new Logger({ 
     closeOnExit: true,
-    path: `${__dirname}/example.log`,
-    append: false,
     hideConsole: false,
 });
 
-logger.log("info", "This is a very simple example.");
+logger.log(Levels.info, "This is a very simple example.");
 ```
 
 ### Output:
 
 Console:
-
-```
-[INFO] This is a very simple example.
-```
-
-File:
 
 ```
 [INFO] This is a very simple example.
