@@ -47,8 +47,8 @@ export default class Logger extends EventEmitter {
     }
 
     log(level: Level, message: string): this {
-        const res1 = this.formaterFile(level, message, new Date(Date.now()));
-        const res2 = this.formaterConsole(level, message, new Date(Date.now()));
+        const res1 = this.formaterConsole(level, message, new Date(Date.now()));
+        const res2 = this.formaterFile(level, message, new Date(Date.now()));
         if (!this.hideConsole) {
             this.customConsole.log(res1);
         }
