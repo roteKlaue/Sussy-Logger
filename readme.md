@@ -4,10 +4,10 @@
 
 ### Setup:
 ```js
-const { Logger, Levels } = require("sussy-logger");
+const { Logger, Levels, FileHandler } = require("sussy-logger");
 const logger = new Logger({ 
-    closeOnExit: true/false/undefined, // standard = true
-    hideConsole: true/false/undefined // standard = false
+    closeOnExit: true/false/undefined, // default: true
+    hideConsole: true/false/undefined // default: false
 });
 
 logger.log(/* level */, /* data */);
@@ -23,6 +23,11 @@ logger.formatConsole((level, message, timestamp) => {
 logger.format((level, message, timestamp) => {
     /* format hier for both return formatted string */
 });
+
+logger.attachFileHandler(new FileHandler("path/to/file", {
+    level: 1-5,
+    only: true/false/undefined // default: false
+}));
 ```
 
 ## Example:

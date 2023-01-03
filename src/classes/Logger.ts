@@ -4,10 +4,11 @@ import { Level, Levels } from "../Types/Level";
 import FileHandler from "./FileHandler";
 import EventEmitter from "events";
 import process from "process";
+import Colors from "../Types/Color";
 
 export default class Logger extends EventEmitter {
     private formaterFile: (level: Level, messgae: string, timestamp?: Date) => string = (level, message) => `[${level.name.toUpperCase()}] ${(message)}`;
-    private formaterConsole: (level: Level, messgae: string, timestamp?: Date) => string = (level, message) => `[${level.name.toUpperCase()}] ${(message)}`;
+    private formaterConsole: (level: Level, messgae: string, timestamp?: Date) => string = (level, message) => `[${level.name.toUpperCase()}] ${level.color?level.color: Colors.reset}${message}${Colors.reset}`;
     private readonly fileHandlers: Array<Array<FileHandler>> = [[], [], [], [], []];
     private readonly customConsole: Console = deepClone(console) as Console;
     private readonly closeOnExit: boolean;
