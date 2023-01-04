@@ -1,6 +1,6 @@
 {
   "name": "sussy-logger",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A customization logger for JavaScript/TypeScript",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build":"tsc"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,6 @@
   },
   "homepage": "https://github.com/roteKlaue/Sussy-Logger#readme",
   "dependencies": {
-    "sussyutilbyraphaelbader": "^1.8.0"
+    "sussy-util": "^1.9.0-dev.0.0.4"
   }
 }

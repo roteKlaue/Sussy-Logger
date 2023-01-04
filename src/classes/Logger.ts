@@ -1,4 +1,4 @@
-import { deepClone } from "sussyutilbyraphaelbader";
+import { deepClone } from "sussy-util";
 import LoggerOptions from "../Types/LoggerOptions";
 import { Level, Levels } from "../Types/Level";
 import FileHandler from "./FileHandler";
