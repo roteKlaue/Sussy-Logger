@@ -26,7 +26,7 @@ export default class FileHandler extends EventEmitter {
 
     write(data: string): void {
         if (this.dead) return;
-        this.file?.write(data);
+        this.file?.write(data + "\n");
         this.emit("written", data);
     }
 

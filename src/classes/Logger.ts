@@ -9,17 +9,15 @@ import Colors from "../Types/Color";
 export default class Logger extends EventEmitter {
     private formaterFile: (level: Level, messgae: string, timestamp?: Date) => string = (level, message) => `[${level.name.toUpperCase()}] ${(message)}`;
     private formaterConsole: (level: Level, messgae: string, timestamp?: Date) => string = (level, message) => `[${level.name.toUpperCase()}] ${level.color?level.color: Colors.reset}${message}${Colors.reset}`;
-    private readonly fileHandlers: Array<Array<FileHandler>> = [[], [], [], [], []];
+    private readonly fileHandlers: FileHandler[][] = [[], [], [], [], []];
     private readonly customConsole: Console = deepClone(console) as Console;
     private readonly closeOnExit: boolean;
     private readonly hideConsole: boolean;
-    private readonly levels: Level[];
 
     constructor(options?: LoggerOptions) {
         super();
         this.closeOnExit = options?.closeOnExit ? true : false;
         this.hideConsole = options?.hideConsole ? true : false;
-        this.levels = options?.levels ? options.levels : [];
 
         process.on("exit", () => {
             if (this.closeOnExit) {
