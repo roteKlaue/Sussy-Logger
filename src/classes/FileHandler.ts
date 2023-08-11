@@ -1,27 +1,25 @@
+import FileHandlerOptions from "../Types/FileHandlerOptions";
 import EventEmitter from "node:events";
 import fs from "node:fs";
-import FileHandlerOptions from "../Types/FileHandlerOptions";
 
 export default class FileHandler extends EventEmitter {
-    private readonly path: string;
     private file: fs.WriteStream | null;
-    private error: Error | undefined;
-    private dead: boolean = false;
     private readonly logBelow: boolean;
     private readonly logLevel: number;
+    private error: Error | undefined;
+    private readonly path: string;
+    private dead: boolean = false;
 
     constructor(path: string, options: FileHandlerOptions) {
         super();
+
         this.path = path;
         this.file = fs.createWriteStream(path);
+
         this.logBelow = !options.only;
         this.logLevel = options.level;
-        this.file?.on('error', (err) => {
-            this.error = err;
-            this.file?.close();
-            this.file = null;
-            this.emit("error", err);
-        });
+
+        this.file?.on('error', this.handleError.bind(this));
     }
 
     write(data: string): void {
@@ -59,5 +57,11 @@ export default class FileHandler extends EventEmitter {
 
     getLevel(): number {
         return this.logLevel;
+    }
+
+    private handleError(err: Error) {
+        this.error = err;
+        this.close();
+        this.emit("error", err);
     }
 }

@@ -12,7 +12,8 @@ const Levels = {
     log: { name: "log", color: Colors.white, level: 3 } as Level,
     warn: { name: "warn", color: Colors.brightRed, level: 2 } as Level,
     success: { name: "success", color: Colors.green, level: 5 } as Level,
-}
+    none: { level: 0, color: Colors.black, name: "none" } as Level
+} as const;
 
 export {
     Level,
