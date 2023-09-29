@@ -3,7 +3,9 @@ import EventEmitter from "node:events";
 import fs from "node:fs";
 
 export default class FileHandler extends EventEmitter {
-    private file: fs.WriteStream | null;
+    private file: fs.WriteStream | undefined;
+    private readonly maxFileSize: number;
+    private currentFileSize: number = 0;
     private readonly logBelow: boolean;
     private readonly logLevel: number;
     private error: Error | undefined;
@@ -14,16 +16,39 @@ export default class FileHandler extends EventEmitter {
         super();
 
         this.path = path;
-        this.file = fs.createWriteStream(path);
+        this.createFile();
 
         this.logBelow = !options.only;
         this.logLevel = options.level;
+        this.maxFileSize = options.maxFileSize??Infinity;
 
-        this.file?.on('error', this.handleError.bind(this));
+        this.setupErrorHandling();
+    }
+
+    private setupErrorHandling(): void {
+        this.file?.on('error', (err) => {
+            this.error = err;
+            console.error(`Error writing to ${this.path}: ${err.message}`);
+            this.close();
+        });
+    }
+
+    private rotateLogFile(): void {
+        this.close();
+        const rotatedFilePath = `${this.path}.${Date.now()}`;
+        fs.renameSync(this.path, rotatedFilePath);
+        this.createFile();
+    }
+
+    private createFile() {
+        this.file = fs.createWriteStream(this.path, { flags: 'a' });
     }
 
     write(data: string): void {
         if (this.dead) return;
+        if (this.currentFileSize + data.length > this.maxFileSize) {
+            this.rotateLogFile();
+        }
         this.file?.write(data + "\n");
         this.emit("written", data);
     }
@@ -31,7 +56,7 @@ export default class FileHandler extends EventEmitter {
     close(): void {
         if (this.dead) return;
         this.file?.close();
-        this.file = null;
+        this.file = undefined;
         this.emit("close");
     }
 
@@ -39,7 +64,7 @@ export default class FileHandler extends EventEmitter {
         return this.path;
     }
 
-    getFile(): fs.WriteStream | null {
+    getFile(): fs.WriteStream | undefined {
         return this.file;
     }
 
@@ -57,11 +82,5 @@ export default class FileHandler extends EventEmitter {
 
     getLevel(): number {
         return this.logLevel;
-    }
-
-    private handleError(err: Error) {
-        this.error = err;
-        this.close();
-        this.emit("error", err);
     }
 }

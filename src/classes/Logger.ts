@@ -17,7 +17,7 @@ export default class Logger extends EventEmitter {
     public constructor(options?: LoggerOptions) {
         super();
         
-        this.closeOnExit = options?.closeOnExit || false;
+        this.closeOnExit = options?.closeOnExit || true;
         this.hideConsole = options?.hideConsole || false;
         this.customConsole = options?.customConsole || deepClone(console) as Console; 
 
