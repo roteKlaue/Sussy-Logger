@@ -6,8 +6,8 @@
 ```js
 const { Logger, Levels, FileHandler } = require("sussy-logger");
 const logger = new Logger({ 
-    closeOnExit: true/false/undefined, // default: true
-    hideConsole: true/false/undefined // default: false
+    closeOnExit?: true/false, // default: true
+    hideConsole?: true/false // default: false
 });
 
 logger.log(/* level */, /* data */);
@@ -26,7 +26,8 @@ logger.format((level, message, timestamp) => {
 
 logger.attachFileHandler(new FileHandler("path/to/file", {
     level: 1-5,
-    only: true/false/undefined // default: false
+    only?: true/false, // default: false
+    maxFileSize: number, // default: Infinity
 }));
 ```
 

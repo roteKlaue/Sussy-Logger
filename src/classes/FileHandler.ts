@@ -12,7 +12,7 @@ export default class FileHandler extends EventEmitter {
     private readonly path: string;
     private dead: boolean = false;
 
-    constructor(path: string, options: FileHandlerOptions) {
+    public constructor(path: string, options: FileHandlerOptions) {
         super();
 
         this.path = path;
@@ -44,7 +44,7 @@ export default class FileHandler extends EventEmitter {
         this.file = fs.createWriteStream(this.path, { flags: 'a' });
     }
 
-    write(data: string): void {
+    public write(data: string): void {
         if (this.dead) return;
         if (this.currentFileSize + data.length > this.maxFileSize) {
             this.rotateLogFile();
@@ -53,34 +53,34 @@ export default class FileHandler extends EventEmitter {
         this.emit("written", data);
     }
 
-    close(): void {
+    public close(): void {
         if (this.dead) return;
         this.file?.close();
         this.file = undefined;
         this.emit("close");
     }
 
-    getPath(): string {
+    public getPath(): string {
         return this.path;
     }
 
-    getFile(): fs.WriteStream | undefined {
+    public getFile(): fs.WriteStream | undefined {
         return this.file;
     }
 
-    getError(): Error | undefined {
+    public getError(): Error | undefined {
         return this.error;
     }
 
-    isDead(): boolean {
+    public isDead(): boolean {
         return this.dead;
     }
 
-    getLogBelow(): boolean {
+    public getLogBelow(): boolean {
         return this.logBelow;
     }
 
-    getLevel(): number {
+    public getLevel(): number {
         return this.logLevel;
     }
 }

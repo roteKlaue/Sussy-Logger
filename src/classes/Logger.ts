@@ -1,24 +1,25 @@
 import LoggerOptions from "../Types/LoggerOptions";
 import { Level, Levels } from "../Types/Level";
+import { Formatter } from "../Types/Formatter";
 import FileHandler from "./FileHandler";
 import { deepClone } from "sussy-util";
+import EventEmitter from "node:events";
 import Colors from "../Types/Color";
-import EventEmitter from "events";
-import process from "process";
+import process from "node:process";
 
 export default class Logger extends EventEmitter {
-    private formaterFile: (level: Level, message: string, timestamp?: Date) => string;
-    private formaterConsole: (level: Level, message: string, timestamp?: Date) => string;
     private readonly fileHandlers: FileHandler[][] = [[], [], [], [], []];
     private readonly customConsole: Console;
     private readonly closeOnExit: boolean;
     private readonly hideConsole: boolean;
+    private formaterConsole: Formatter;
+    private formaterFile: Formatter;
 
     public constructor(options?: LoggerOptions) {
         super();
         
-        this.closeOnExit = options?.closeOnExit || true;
-        this.hideConsole = options?.hideConsole || false;
+        this.closeOnExit = options?.closeOnExit ?? true;
+        this.hideConsole = options?.hideConsole ?? false;
         this.customConsole = options?.customConsole || deepClone(console) as Console; 
 
         this.formaterFile = this.defaultFileFormatter;
@@ -28,18 +29,18 @@ export default class Logger extends EventEmitter {
         process.on("uncaughtException", this.handleUncaughtException.bind(this));
     }
 
-    public format(callback: (level: Level, message: string, timestamp?: Date) => string): this {
+    public format(callback: Formatter): this {
         this.formaterFile = callback;
         this.formaterConsole = callback;
         return this;
     }
 
-    public formatConsole(callback: (level: Level, messgae: string, timestamp?: Date) => string): this {
+    public formatConsole(callback: Formatter): this {
         this.formaterConsole = callback;
         return this;
     }
 
-    public formatFile(callback: (level: Level, messgae: string, timestamp?: Date) => string): this {
+    public formatFile(callback: Formatter): this {
         this.formaterFile = callback;
         return this;
     }
@@ -73,11 +74,11 @@ export default class Logger extends EventEmitter {
         return this;
     }
 
-    private defaultFileFormatter(level: Level, message: string, timestamp?: Date): string {
+    private defaultFileFormatter(level: Level, message: string, _: Date): string {
         return `[${level.name.toUpperCase()}] ${message}`;
     }
 
-    private defaultConsoleFormatter(level: Level, message: string, timestamp?: Date): string {
+    private defaultConsoleFormatter(level: Level, message: string, _: Date): string {
         const color = level.color || Colors.reset;
         return `[${level.name.toUpperCase()}] ${color}${message}${Colors.reset}`;
     }
