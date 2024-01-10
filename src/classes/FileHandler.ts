@@ -1,8 +1,9 @@
 import FileHandlerOptions from "../Types/FileHandlerOptions";
+import IFileHandler from "../Types/IFileHandler";
 import EventEmitter from "node:events";
 import fs from "node:fs";
 
-export default class FileHandler extends EventEmitter {
+export default class FileHandler extends EventEmitter implements IFileHandler {
     private file: fs.WriteStream | undefined;
     private readonly maxFileSize: number;
     private currentFileSize: number = 0;
@@ -20,7 +21,7 @@ export default class FileHandler extends EventEmitter {
 
         this.logBelow = !options.only;
         this.logLevel = options.level;
-        this.maxFileSize = options.maxFileSize??Infinity;
+        this.maxFileSize = options.maxFileSize ?? Infinity;
 
         this.setupErrorHandling();
     }
@@ -82,5 +83,31 @@ export default class FileHandler extends EventEmitter {
 
     public getLevel(): number {
         return this.logLevel;
+    }
+
+    public toJSON(): Record<string, any> {
+        return {
+            path: this.path,
+            maxFileSize: this.maxFileSize,
+            currentFileSize: this.currentFileSize,
+            logBelow: this.logBelow,
+            logLevel: this.logLevel,
+            error: this.error ? this.error.message : undefined,
+            dead: this.dead,
+        };
+    }
+
+    public static fromJSON(json: Record<string, any>): FileHandler {
+        const fileHandler = new FileHandler(json.path, {
+            only: !json.logBelow,
+            level: json.logLevel,
+            maxFileSize: json.maxFileSize,
+        });
+
+        fileHandler.currentFileSize = json.currentFileSize;
+        fileHandler.error = json.error ? new Error(json.error) : undefined;
+        fileHandler.dead = json.dead;
+
+        return fileHandler;
     }
 }

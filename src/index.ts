@@ -1,10 +1,12 @@
-import Logger from './Classes/Logger';
-import { Level, Levels } from './Types/Level';
-import LoggerOptions from './Types/LoggerOptions';
 import PermissionException from './Classes/PermissionException';
-import Color from './Types/Color';
-import FileHandler from './Classes/FileHandler';
+import FileHandlerWorker from './Classes/FileHandlerWorker';
 import FileHandlerOptions from './Types/FileHandlerOptions';
+import LoggerOptions from './Types/LoggerOptions';
+import IFileHandler from './Types/IFileHandler';
+import FileHandler from './Classes/FileHandler';
+import { Level, Levels } from './Types/Level';
+import Logger from './Classes/Logger';
+import Color from './Types/Color';
 
 export {
     Logger,
@@ -14,5 +16,7 @@ export {
     PermissionException,
     Color,
     FileHandler,
-    FileHandlerOptions
+    FileHandlerOptions,
+    IFileHandler,
+    FileHandlerWorker
 }

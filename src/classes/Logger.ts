@@ -1,4 +1,6 @@
+import FileHandlerWorker from "./FileHandlerWorker";
 import LoggerOptions from "../Types/LoggerOptions";
+import IFileHandler from "../Types/IFileHandler";
 import { Level, Levels } from "../Types/Level";
 import { Formatter } from "../Types/Formatter";
 import FileHandler from "./FileHandler";
@@ -8,7 +10,8 @@ import Colors from "../Types/Color";
 import process from "node:process";
 
 export default class Logger extends EventEmitter {
-    private readonly fileHandlers: FileHandler[][] = [[], [], [], [], []];
+    private readonly fileHandlers: IFileHandler[][] = [[], [], [], [], []];
+    private readonly multithreading: boolean;
     private readonly customConsole: Console;
     private readonly closeOnExit: boolean;
     private readonly hideConsole: boolean;
@@ -20,7 +23,8 @@ export default class Logger extends EventEmitter {
         
         this.closeOnExit = options?.closeOnExit ?? true;
         this.hideConsole = options?.hideConsole ?? false;
-        this.customConsole = options?.customConsole || deepClone(console) as Console; 
+        this.multithreading = options?.multithreading ?? false;
+        this.customConsole = options?.customConsole || deepClone(console) as Console;
 
         this.formaterFile = this.defaultFileFormatter;
         this.formaterConsole = this.defaultConsoleFormatter;
@@ -61,14 +65,16 @@ export default class Logger extends EventEmitter {
     }
 
     public attachFileHandler(handler: FileHandler): this {
+        let handling: IFileHandler = this.multithreading? new FileHandlerWorker(handler) : handler;
         const level = handler.getLevel() - 1;
+
         if (!handler.getLogBelow()) {
-            this.fileHandlers[level].push(handler);
+            this.fileHandlers[level].push(handling);
             return this;
         }
 
         for (let i = level; i >= 0; i--) {
-            this.fileHandlers[i].push(handler);
+            this.fileHandlers[i].push(handling);
         }
 
         return this;

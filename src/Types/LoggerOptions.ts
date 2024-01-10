@@ -5,6 +5,7 @@ declare type LoggerOptions = {
     hideConsole?: boolean;
     levels?: Level[];
     customConsole?: Console;
+    multithreading?: boolean;
 }
 
 export default LoggerOptions;

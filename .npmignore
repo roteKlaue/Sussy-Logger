@@ -1,2 +1,6 @@
 /src
+/.github
 tsconfig.json
+CODE_OF_CONDUCT.md
+tsconfig.json
+yarn.lock
